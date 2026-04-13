@@ -53,6 +53,12 @@ A multi-vertical B2C empire powered by AI + a sovereign orchestration brain that
 ~130k LOC across portfolio · 22+ MCP servers · 200+ tools exposed
 ```
 
+## 📈 Live metrics
+
+![Metrics](./metrics.svg)
+
+*Auto-updated every 6h via `.github/workflows/metrics.yml` (lowlighter/metrics v3.34).*
+
 ## 🤝 Get in touch
 
 - 💼 LinkedIn: [Hatim JOUIET](https://www.linkedin.com/in/hatim-jouiet-9223242b5/)
