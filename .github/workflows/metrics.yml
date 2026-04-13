@@ -1,0 +1,51 @@
+# Auto-generates GitHub metrics SVG for the profile README.
+# Uses lowlighter/metrics (30+ plugins, ~10k stars OSS).
+#
+# Requirements to activate (HITL user action):
+#   1. Create a fine-grained Personal Access Token with read:user + public_repo scopes
+#      at https://github.com/settings/tokens (Classic) or
+#      https://github.com/settings/personal-access-tokens/new (fine-grained).
+#   2. Add it as repository secret named METRICS_TOKEN in Jouiet/Jouiet settings.
+#   3. The workflow will run every 6h + on push to main.
+#
+# No untrusted input used in run: steps (safe per github.blog/security workflow injection guide).
+
+name: Metrics
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/metrics.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  github-metrics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Global metrics (pinned v3.34)
+        uses: lowlighter/metrics@v3.34
+        with:
+          filename: metrics.svg
+          token: ${{ secrets.METRICS_TOKEN }}
+          user: Jouiet
+          base: header, activity, community, repositories, metadata
+          config_timezone: Europe/Paris
+          plugin_languages: yes
+          plugin_languages_ignored: html, css, shell, tex, dockerfile
+          plugin_languages_details: percentage, lines
+          plugin_lines: yes
+          plugin_topics: yes
+          plugin_topics_mode: icons
+          plugin_traffic: yes
+          plugin_followup: yes
+          plugin_followup_sections: repositories, user
+          committer_message: "chore(metrics): auto-update SVG"
+          output_action: commit
+          commit_author: "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>"
